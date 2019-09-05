@@ -1,0 +1,15 @@
+a{
+  text-decoration:none;
+  display:inline-block;
+  padding:8px;
+  margin:8px;
+  border-radius:10px;
+  background-color:#808080;
+  color:white;
+  text-align: center;
+}
+
+a:hover{
+  background-color:#D3D3D3;
+  color:black;
+}

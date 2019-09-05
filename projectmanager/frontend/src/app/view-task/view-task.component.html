@@ -1,0 +1,115 @@
+<br>
+<form class="form-horizontal" (ngSubmit)="f.form.valid && getTasks()" #f="ngForm">
+
+  <div class="row form-group">
+    <p class="control-label col col-sm-1"> Project: </p>
+    <div class="col col-sm-4">
+      <input type="text" disabled="true" class="form-control" [(ngModel)]="projectName" name="projectName"  id="projectName"
+             #prj="ngModel" [ngClass]="{ 'is-invalid': f.submitted && prj.invalid }" required/>
+    </div>
+    <div class="col col-sm-1">
+      <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#projectModal">
+        Search
+      </button>
+    </div>
+    <div *ngIf="f.submitted && prj.invalid" class="invalid-feedback">
+      <div *ngIf="prj.errors.required" class="text-danger">Project is required</div>
+    </div>
+
+    <p class="control-label col col-sm-2"> Sort Task By: </p>
+
+    <div class="col col-sm-1" >
+      <input type="button" class="btn btn-primary" value="Start Date" (click)="sortBy('startDate')">
+    </div>
+
+    <div class="col col-sm-1" >
+      <input type="button" class="btn btn-primary" value="End Date" (click)="sortBy('endDate')">
+    </div>
+
+    <div class="col col-sm-1" >
+      <input type="button" class="btn btn-primary" value="Priority" (click)="sortBy('priority')">
+    </div>
+
+    <div class="col col-sm-1" >
+      <input type="button" class="btn btn-primary" value="Completed" (click)="sortBy('completed')">
+    </div>
+
+  </div>
+
+  <hr color="black">
+
+  <div class="modal fade" id="projectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 align="center" class="modal-title" id="projectModalLabel">Projects List</h2>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <input type="text" class="form-control" [(ngModel)]="searchProjectText"
+                 name="searchProject"  id="searchProject" placeholder="Search..."/>
+
+          <br>
+
+          <div class="list-group">
+            <div class="list-group-item" *ngFor="let project of projectList | filter : searchProjectText">
+              <aside>
+                <input type="button" class="btn" value="Select" (click)="updateProjectOnScreen(project)" data-dismiss="modal"> <br> <br>
+              </aside>
+              <p><b> Project Name: </b> {{project.project}}</p>
+              <p><b> Start Date: </b> {{getDate(project.startDate)}}</p>
+              <p><b> End Date: </b> {{getDate(project.endDate)}}</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</form>
+
+
+
+  <div class="list-group">
+    <div style="background-color:#e6e6ff" class="list-group-item" *ngFor="let task of taskList">
+
+      <div class="row form-group">
+
+        <div style="float:left"  class="col col-sm-2">
+          <b> Task </b> <br> {{task.taskName}}
+        </div>
+        <div style="float:left" class="col col-sm-2">
+          <b> Parent </b> <br> {{task.parentName}}
+        </div>
+        <div style="float:left" class="col col-sm-1">
+          <b> Priority </b> <br> {{task.priority}}
+        </div>
+        <div style="float:left" class="col col-sm-2">
+          <b> Start Date </b> <br> {{getDate(task.startDate)}}
+        </div>
+        <div style="float:left" class="col col-sm-2">
+          <b> EndDate </b> <br> {{getDate(task.endDate)}}
+        </div>
+        <div style="float:left" class="col col-sm-1">
+          <input type="button" class="btn btn-primary" value="Edit" (click)="callViewTask(task)">
+        </div>
+        <div *ngIf="!isTaskCompleted(task)" style="float:left" class="col col-sm-2">
+          <input type="button" class="btn btn-primary" value="End Task" (click)="endTask(task)">
+        </div>
+        <div *ngIf="isTaskCompleted(task)" style="float:left" class="col col-sm-2">
+          <p>Completed</p>
+        </div>
+
+      </div>
+
+
+
+    </div>
+
+  </div>
+
+

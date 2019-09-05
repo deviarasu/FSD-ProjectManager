@@ -1,0 +1,8 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-image: url("assets/bg3.jpg" )}
+p {font-size: medium;}
+h4 {color: 	#6f0000}
+input.largerCheckbox {  width: 20px;  height: 20px;}
+h2 {font-family: "Apple Chancery", cursive}

@@ -1,0 +1,227 @@
+<br>
+  <form class="form-horizontal" (ngSubmit)="f.form.valid && saveTask(f)" #f="ngForm">
+
+    <div class="row form-group">
+      <p class="control-label col col-sm-2"> Project: </p>
+      <div class="col col-sm-4">
+        <input type="text" disabled="true" class="form-control" [(ngModel)]="projectName"
+               name="projectName"  id="projectName"/>
+      </div>
+      <div class="col col-sm-2">
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#projectModal">
+          Search
+        </button>
+      </div>
+
+      <div *ngIf="projectNameError" class="text-danger">Project is required</div>
+
+    </div>
+
+    <div class="modal fade" id="projectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 align="center" class="modal-title" id="projectModalLabel">Projects List</h2>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <input type="text" class="form-control" [(ngModel)]="searchProjectText"
+                     name="searchProject"  id="searchProject" placeholder="Search..."/>
+
+              <br>
+
+              <div class="list-group">
+                <div class="list-group-item" *ngFor="let project of projectList | filter : searchProjectText">
+                  <aside>
+                    <input type="button" class="btn" value="Select" (click)="updateProjectOnScreen(project)" data-dismiss="modal"> <br> <br>
+                  </aside>
+                  <p><b> Project Name: </b> {{project.project}}</p>
+                  <p><b> Start Date: </b> {{getDate(project.startDate)}}</p>
+                  <p><b> End Date: </b> {{getDate(project.endDate)}}</p>
+                </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <p class="control-label col col-sm-2"> Task: </p>
+      <div class="col col-sm-4">
+        <input type="text" class="form-control" [(ngModel)]="taskName"
+               name="taskName"  id="taskName" #task="ngModel"
+               [ngClass]="{ 'is-invalid': f.submitted && task.invalid }" required />
+      </div>
+
+      <div *ngIf="f.submitted && task.invalid" class="invalid-feedback">
+        <div *ngIf="task.errors.required" class="text-danger">Task Name is required</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <p class="control-label col col-sm-3"></p>
+      <div class="col col-sm-1">
+        <input type="checkbox" class="largerCheckbox" [(ngModel)]="isParentTask" name="isParentTask"  id="isParentTask"/>
+      </div>
+      <div class="col col-sm-2">
+        <p> Parent Task </p>
+      </div>
+    </div>
+
+    <div *ngIf="!isParentTask">
+
+    <div class="form-group">
+      <p class="control-label col col-sm-2"> Priority: </p>
+      <div class="col col-sm-4">
+        <input type="range" min="0" max="30" class="form-control" [(ngModel)]="priority" name="priority"  id="priority"/>
+      </div>
+      <div class="col col-sm-1">
+        <label id="pr" class="mat-small">{{priority}}</label>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <p class="control-label col col-sm-2"> Parent Task: </p>
+      <div class="col col-sm-4">
+        <input type="text" disabled="true" class="form-control" [(ngModel)]="parentTaskName"
+               name="parentTaskName"  id="parentTaskName"/>
+      </div>
+      <div class="col col-sm-2">
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#parentTaskModal">
+          Search
+        </button>
+      </div>
+
+      <div *ngIf="parentTaskError" class="text-danger">Parent Task is required</div>
+
+    </div>
+
+    <div class="modal fade" id="parentTaskModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 align="center" class="modal-title" id="parentTaskModalLabel">Parent Task List</h2>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <input type="text" class="form-control" [(ngModel)]="searchParentTaskText"
+                   name="searchParentTask"  id="searchParentTask" placeholder="Search..."/>
+
+            <br>
+
+            <div class="list-group">
+              <div class="list-group-item" *ngFor="let parentTask of parentTaskList | filter : searchParentTaskText">
+                <aside>
+                  <input type="button" class="btn" value="Select" (click)="updateParentTaskOnScreen(parentTask)" data-dismiss="modal"> <br> <br>
+                </aside>
+                <p><b> Parent Task Name: </b> {{parentTask.parentTask}}</p>
+              </div>
+
+          </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="row form-group" >
+      <p class="control-label col col-sm-2"> Start Date: </p>
+      <div class="col col-sm-2">
+        <input type="date" id="startDate" name="startDate"
+               class="form-control" [(ngModel)]="startDate"/>
+      </div>
+
+      <p class="control-label col col-sm-2"> End Date: </p>
+      <div class="col col-sm-2">
+        <input type="date" id="endDate" name="endDate"
+               class="form-control" [(ngModel)]="endDate"/>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <p class="control-label col col-sm-2"> User: </p>
+      <div class="col col-sm-4">
+        <input type="text" disabled="true" class="form-control" [(ngModel)]="userName"
+               name="userName"  id="userName"/>
+      </div>
+      <div class="col col-sm-2">
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#userModal">
+          Search
+        </button>
+      </div>
+
+      <div *ngIf="userNameError" class="text-danger">User is required</div>
+
+    </div>
+
+    <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 align="center" class="modal-title" id="userModalLabel">Task List</h2>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+
+            <input type="text" class="form-control" [(ngModel)]="searchUserText"
+                   name="searchUser"  id="searchUser" placeholder="Search..."/>
+
+            <br>
+
+            <div class="list-group">
+              <div class="list-group-item" *ngFor="let user of userList | filter : searchUserText">
+                <aside>
+                  <input type="button" class="btn" value="Select" (click)="updateUserOnScreen(user)" data-dismiss="modal"> <br> <br>
+                </aside>
+                <p><b> First Name: </b> {{user.firstName}}</p>
+                <p><b> Last Name: </b> {{user.lastName}}</p>
+                <p><b> Employee Id: </b> {{user.employeeId}}</p>
+
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div class="row form-group">
+
+      <div class="col col-sm-2" >      </div>
+
+      <div class="col col-sm-1" >
+        <input type="submit" class="btn btn-primary" value="Add task" *ngIf="!isEdit">
+      </div>
+
+      <div class="col col-sm-1" >
+        <input type="button" class="btn btn-primary" value="Reset" *ngIf="!isEdit" (click)="updateScreenChange(f)">
+      </div>
+
+      <div class="col col-sm-1">
+        <input type="submit" class="btn btn-primary" value="Update" *ngIf="isEdit">
+      </div>
+
+      <div class="col col-sm-1" >
+        <input type="reset" class="btn btn-primary" value="Cancel" *ngIf="isEdit" (click)="updateScreenChange(f)">
+      </div>
+
+    </div>
+
+
+  </form>

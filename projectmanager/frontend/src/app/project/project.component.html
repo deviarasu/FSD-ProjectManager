@@ -1,0 +1,183 @@
+<br>
+<section>
+  <form class="form-horizontal" (ngSubmit)="f.form.valid && saveProject(f)" #f="ngForm">
+
+    <div class="form-group">
+      <p class="control-label col col-sm-2"> Project: </p>
+      <div class="col col-sm-4">
+        <input type="text" class="form-control" [(ngModel)]="projectName"
+               name="project"  id="project" #project="ngModel"
+               [ngClass]="{ 'is-invalid': f.submitted && project.invalid }" required />
+      </div>
+
+      <div *ngIf="f.submitted && project.invalid" class="invalid-feedback">
+        <div *ngIf="project.errors.required" class="text-danger">Project is required</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <p class="control-label col col-sm-3"></p>
+      <div class="col col-sm-1">
+        <input type="checkbox" class="largerCheckbox" [(ngModel)]="showStartEndDate" name="showStartEndDate"  id="showStartEndDate"/>
+      </div>
+      <div class="col col-sm-4">
+        <p> Set Start and End Date </p>
+      </div>
+    </div>
+
+    <div class="row form-group" *ngIf="showStartEndDate">
+      <p class="control-label col col-sm-2"> Start Date: </p>
+      <div class="col col-sm-2">
+        <input type="date" id="startDate" name="startDate"
+               class="form-control" [(ngModel)]="startDate"/>
+      </div>
+
+      <p class="control-label col col-sm-2"> End Date: </p>
+      <div class="col col-sm-2">
+        <input type="date" id="endDate" name="endDate"
+               class="form-control" [(ngModel)]="endDate"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <p class="control-label col col-sm-2"> Priority: </p>
+      <div class="col col-sm-4">
+        <input type="range" min="0" max="30" class="form-control" [(ngModel)]="priority" name="priority"  id="priority"/>
+      </div>
+      <div class="col col-sm-1">
+        <label id="pr" class="mat-small">{{priority}}</label>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <p class="control-label col col-sm-2"> Manager: </p>
+      <div class="col col-sm-4">
+        <input type="text" disabled="true" class="form-control" [(ngModel)]="manager"
+               name="manager"  id="manager"/>
+      </div>
+      <div class="col col-sm-2">
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#managerModal">
+          Search
+        </button>
+      </div>
+
+      <div *ngIf="managerNameError" class="text-danger">Manager Name is required</div>
+    </div>
+
+    <div class="modal fade" id="managerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 align="center" class="modal-title" id="managerModalLabel">Users List</h2>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <input type="text" class="form-control" [(ngModel)]="searchText" name="search"  id="search" placeholder="Search..."/>
+
+            <br>
+
+            <div class="list-group">
+              <div class="list-group-item" *ngFor="let user of userList | filter : searchText">
+                <aside>
+                <input type="button" class="btn" value="Select" (click)="updateManagerOnScreen(user)" data-dismiss="modal"> <br> <br>
+                </aside>
+                <p><b> First Name: </b> {{user.firstName}}</p>
+                <p><b> Last Name: </b> {{user.lastName}}</p>
+                <p><b> Employee Id: </b> {{user.employeeId}}</p>
+
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row form-group">
+
+      <div class="col col-sm-2" >      </div>
+
+      <div class="col col-sm-1" >
+        <input type="submit" class="btn btn-primary" value="Add" *ngIf="!isEdit">
+      </div>
+
+      <div class="col col-sm-1" >
+        <input type="reset" class="btn btn-primary" value="Reset" *ngIf="!isEdit">
+      </div>
+
+      <div class="col col-sm-1">
+        <input type="submit" class="btn btn-primary" value="Update" *ngIf="isEdit">
+      </div>
+
+      <div class="col col-sm-1" >
+        <input type="reset" class="btn btn-primary" value="Cancel" *ngIf="isEdit" (click)="updateScreenChange()">
+      </div>
+
+    </div>
+
+  </form>
+</section>
+
+
+<hr color="black">
+
+<section>
+  <div class="form-horizontal">
+    <div class="row form-group">
+      <div class="col col-sm-4">
+        <input type="text" class="form-control" [(ngModel)]="projectSearchText" name="projectSearch"  id="projectSearch" placeholder="Search..."/>
+      </div>
+    </div>
+
+    <div class="row form-group">
+
+      <p class="control-label col col-sm-1"> Sort By: </p>
+
+      <div class="col col-sm-1" >
+        <input type="button" class="btn btn-primary" value="Start Date" (click)="sortBy('startDate')">
+      </div>
+
+      <div class="col col-sm-1" >
+        <input type="button" class="btn btn-primary" value="End Date" (click)="sortBy('endDate')">
+      </div>
+
+      <div class="col col-sm-1" >
+        <input type="button" class="btn btn-primary" value="Priority" (click)="sortBy('priority')">
+      </div>
+
+      <div class="col col-sm-1" >
+        <input type="button" class="btn btn-primary" value="Completed" (click)="sortBy('completed')">
+      </div>
+
+    </div>
+
+    <div class="row form-group">
+
+      <div class="list-group">
+        <div style="background-color:#e6e6ff" class="list-group-item" *ngFor="let project of projectList | filter : projectSearchText">
+          <h4><u>{{project.project}}</u></h4>
+          <aside>
+            <input type="button" class="btn btn-primary" value="Update" (click)="updateScreenChange(project)"> <br> <br>
+            <input type="button" class="btn btn-primary" value="Suspend" (click)="deleteProject(project)">
+          </aside>
+          <p><b> No Of Task: </b> {{project.noTask}}</p>
+          <p><b> Completed: </b> {{project.completed}}</p>
+          <p><b> Start Date: </b> {{getDate(project.startDate)}}</p>
+          <p><b> End Date: </b> {{getDate(project.endDate)}}</p>
+          <p><b> Priority: </b> {{project.priority}}</p>
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
