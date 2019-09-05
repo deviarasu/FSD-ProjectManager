@@ -1,0 +1,15 @@
+server:
+  port: 8736
+  
+#####################################################
+# Database Connection Properties
+#####################################################
+db:
+  pm:
+    jdbc-url: jdbc:mysql://127.0.0.1:3306/projectmanager
+    username: root
+    password: password
+    driver: com.mysql.jdbc.Driver
+    maximum-pool-size: 1
+    idle-timeout: 10000
+    maxLifetime: 1800000
