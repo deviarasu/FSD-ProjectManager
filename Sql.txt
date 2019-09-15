@@ -1,0 +1,55 @@
+CREATE TABLE
+    parent_task
+    (
+        PARENT_ID INT NOT NULL AUTO_INCREMENT,
+        PARENT_TASK VARCHAR(30) NOT NULL,
+        PRIMARY KEY (PARENT_ID),
+        CONSTRAINT ParentTask_ix1 UNIQUE (PARENT_TASK)
+    )
+
+
+CREATE TABLE
+    project
+    (
+        PROJECT_ID INT NOT NULL AUTO_INCREMENT,
+        PROJECT VARCHAR(30) NOT NULL,
+        START_DATE DATE NOT NULL,
+        END_DATE DATE NOT NULL,
+        PRIORITY INT DEFAULT 0 NOT NULL,
+        MANAGER_NAME VARCHAR(100) NOT NULL,
+        PRIMARY KEY (PROJECT_ID),
+        CONSTRAINT project_ix1 UNIQUE (PROJECT)
+    )
+
+
+CREATE TABLE
+    task
+    (
+        TASK_ID INT NOT NULL AUTO_INCREMENT,
+        PARENT_ID INT NOT NULL,
+        PROJECT_ID INT NOT NULL,
+        TASK VARCHAR(30) NOT NULL,
+        START_DATE DATE NOT NULL,
+        END_DATE DATE NOT NULL,
+        PRIORITY INT NOT NULL,
+        STATUS VARCHAR(30),
+        PRIMARY KEY (TASK_ID),
+        CONSTRAINT task_fk1 FOREIGN KEY (PARENT_ID) REFERENCES `parent_task` (`parent_id`) ,
+        CONSTRAINT task_fk2 FOREIGN KEY (PROJECT_ID) REFERENCES `project` (`project_id`),
+        INDEX task_fk1 (PARENT_ID),
+        INDEX task_fk2 (PROJECT_ID)
+    )
+
+CREATE TABLE
+    USER
+    (
+        USER_ID INT NOT NULL AUTO_INCREMENT,
+        FIRST_NAME VARCHAR(30) NOT NULL,
+        LAST_NAME VARCHAR(30) NOT NULL,
+        EMPLOYEE_ID INT NOT NULL,
+        PROJECT_ID INT,
+        TASK_ID INT,
+        PRIMARY KEY (USER_ID),
+        INDEX user_fk1 (PROJECT_ID),
+        INDEX user_fk2 (TASK_ID)
+    )
